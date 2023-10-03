@@ -1,24 +1,22 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import LoginFormPage from "./pages/homePage";
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {useSelector} from "react-redux";
+import {useTypedSelector} from "./hooks/useTypedSelector";
+import {selectAuthUser} from "./app/reducers/authUserReducer";
+import ChatPage from "./pages/chatPage";
 
 function App() {
-  return (
+
+  const user = useTypedSelector(selectAuthUser)
+
+  return user.isLoggedIn ? (
+          <ChatPage />
+      )
+  : (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <LoginFormPage />
     </div>
   );
 }
