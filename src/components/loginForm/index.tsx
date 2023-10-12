@@ -3,23 +3,21 @@ import styles from "./loginForm.module.scss";
 import UserAvatar from "../userAvatar";
 import manImgPath from "../../assets/img/avatarForMan.jpg";
 import womanImgPath from "../../assets/img/avatarForWoman.jpg"
-
-//import {useDispatch} from "react-redux";
-//import {loginUser} from "../../app/asyncActions";
-
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import {IAuthUser} from "../../types/authUser";
-
+import {IUser} from "../../types/usersTypes";
+import {loginUser} from "../../app/asyncActions";
+import {useTypedDispatch} from "../../hooks/useTypedDispatch";
 
 export default function LoginForm(){
 
     const [name, setName] = useState("");
     const [gender, setGender] = useState("");
     const [validated, setValidated] = useState(false);
-    //const dispatch = useDispatch();
+
+    const dispatch = useTypedDispatch()
 
     function onChangeName(e: React.ChangeEvent<HTMLInputElement>){
         setName(e.target.value);
@@ -30,9 +28,12 @@ export default function LoginForm(){
     }
 
     function onSubmitForm(e: React.FormEvent<HTMLFormElement>){
-        setName(name.trim());
-        const user: IAuthUser = {name: name.trim(),
-                                 gender
+        const userName = name.trim();
+        setName(userName);
+        const user: IUser = {name: userName,
+                                 gender,
+                                 id: null,
+                                 imgPath: ""
                                 };
         const form = e.currentTarget;
 
@@ -41,12 +42,11 @@ export default function LoginForm(){
         if (!form.checkValidity() || !user.name.length) {
             e.stopPropagation();
         } else {
-            console.log(user)
-            //dispatch(loginUser(user));
+            dispatch(loginUser(user));
         }
         setValidated(true);
     }
-
+// !!!!!!!!!!!!!!!!NEED REFACTOR RETURN BLOCK !!!!!!!!!!!!!!!!!!!!!!!!!
     return (
         <Form className={styles.wrap}
               onSubmit={onSubmitForm}
